@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('SCM') {
+            steps {
+                git 'https://github.com/ganesananusha/WEBAPP.git'
+            }
+        }
+        stage('BUILD') {
+            steps {
+                bat 'mvn clean'
+                bat 'mvn install'
+            }
+        }
+        stage('DEPLOY') {
+            steps {
+                deploy adapters: [tomcat9(credentialsId: 'WEBAPP', path: '', url: 'http://localhost:8080/')], contextPath: 'DEMOPIPELINE', war: '**/*.war'
+            }
+        }
+
+    }
+}
